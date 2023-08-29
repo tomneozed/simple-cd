@@ -1,0 +1,15 @@
+build-job: 
+  stage: build
+  script: 
+    - echo "Hello $GITLAB_USER_LOGIN m ready to build your app"
+
+test-job: 
+  stage: test
+  script: 
+    - echo "Ready to run tests"
+
+deploy-prod: 
+  stage: deploy
+  script: 
+    - echo "Deploy $CI_COMMIT_BRANCH branch to target"
+  environment: production
