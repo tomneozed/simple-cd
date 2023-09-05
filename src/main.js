@@ -1,3 +1,5 @@
+import { TemplateLoader } from "./_helpers/template-loader"
+
 class Main {
     #people = [
         {
@@ -40,10 +42,10 @@ class Main {
         const ul = document.createElement('ul')
         this.#people.forEach((p) => {
             const li = document.createElement('li')
-            if (p !== 'Billy Idol') {
-                li.innerText = p
+            if (p.firstname !== 'Billy' && p.lastname !== 'Idol') {
+                li.innerText = p.firstname + p.lastname
             } else {
-                li.innerHTML = `<strong>${p}</strong>`
+                li.innerHTML = `<strong>${p.firstname + p.lastname}</strong>`
             }
             ul.appendChild(li)
         }) 
@@ -51,22 +53,31 @@ class Main {
 
         // Les Tables 
         const table = document.querySelector('tbody')
-        this.#people.forEach((p) => {
+        this.#people.forEach((person) => {
             const tr = document.createElement('tr')
-            const tdLastname = document.createElement('td')
-            const tdFirstname = document.createElement('td')
-            const tdBand = document.createElement('td')
-            tdLastname.innerText = p.lastname
-            tdFirstname.innerText = p.firstname
-            tdBand.innerText = p.band
-            tr.appendChild(tdLastname)
-            tr.appendChild(tdFirstname)
-            tr.appendChild(tdBand)
+
+            tr.appendChild(Main.#makeCheckboxTd())
+
+            for (const attribute in person) {
+                const td = document.createElement('td')
+                td.innerText = person[attribute]
+                tr.appendChild(td)
+            }
+
             table.appendChild(tr)
         })
+    }
 
-
-
+    static #makeCheckboxTd() {
+        const td = document.createElement('td')
+        const templateLoader = new TemplateLoader('item-checkbox')
+        try {
+            const checkox = templateLoader.loadTemplate()
+            td.appendChild(checkox)
+        } catch (e) {
+            td.innerHTML = '&nbsp;'
+        }
+        return td
     }
 }
 
@@ -74,3 +85,14 @@ class Main {
 (function () {
     const app = new Main()
 })()
+
+document.getElementById('main-checkbox').addEventListener(
+    'click', 
+    (event) => {
+        const checkbox = event.target
+        if (checkbox.checked) {
+            console.log('Have to check all lines')
+        } else {
+            console.log('Have to uncheck all lines')
+        }
+    })
