@@ -24,6 +24,10 @@ class Main {
         }
     ]
 
+    get people() {
+        return this.#people
+    }
+
     constructor() {
         this.#run()
     }
@@ -82,17 +86,47 @@ class Main {
 }
 
 // Self callable function to run the Main class
+let app
 (function () {
-    const app = new Main()
+    app = new Main()
 })()
 
 document.getElementById('main-checkbox').addEventListener(
     'click', 
     (event) => {
         const checkbox = event.target
-        if (checkbox.checked) {
-            console.log('Have to check all lines')
-        } else {
-            console.log('Have to uncheck all lines')
+        const itemCheckboxes = document.getElementsByClassName('item-checkbox')
+
+        let doCheck = false
+
+        if(checkbox.checked) {
+            doCheck = true
         }
-    })
+
+        for (const itemCheckbox of itemCheckboxes) {
+            itemCheckbox.checked = doCheck
+        }    
+    }
+)
+
+const tbody = document.querySelector('tbody')
+tbody.addEventListener(
+    'click',
+    (event) => {
+        if (event.target.tagName === 'INPUT') {
+            const checkbox = event.target
+
+            if(checkbox.classList.contains('item-checkbox')) {
+                const mainCheckbox = document.getElementById('main-checkbox')
+                if (checkbox.checked === false) {
+                    mainCheckbox.checked = false
+                } else {
+                    const itemCheckboxes = Array.from(document.getElementsByClassName('item-checkbox'))
+                    const checkedItems = itemCheckboxes.filter((itemCheckbox) => itemCheckbox.checked)
+
+                    mainCheckbox.checked = !(checkedItems.length - app.people.length)
+                }
+            }
+        }
+    }
+)
