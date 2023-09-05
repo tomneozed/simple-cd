@@ -1,34 +1,17 @@
 import { TemplateLoader } from "./_helpers/template-loader"
+import { PeopleService } from "./services/people-service"
 
 class Main {
-    #people = [
-        {
-            "lastname": "Smith",
-            "firstname": "Robert",
-            "band": "The Cure"
-        },
-        {
-            "lastname": "Idol",
-            "firstname": "Billy",
-            "band": "Generation X"            
-        },
-        {
-            "lastname": "Hagen",
-            "firstname": "Nina",
-            "band": "Nina Hagen"            
-        },
-        {
-            "lastname": "Vicious",
-            "firstname": "Sid",
-            "band": "Sex Pistols"            
-        }
-    ]
+    #people = []
+    #service = null
 
     get people() {
         return this.#people
     }
 
     constructor() {
+        this.#service = new PeopleService()
+        this.#people = this.#service.people
         this.#run()
     }
 
